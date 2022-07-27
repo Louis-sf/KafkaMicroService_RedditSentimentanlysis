@@ -4,7 +4,7 @@ import requests
 from prawcore import NotFound
 
 # ###############PSAW CONFIG########################
-keyfile = open('secrets/prawkeys.json')
+keyfile = open('../secrets/prawkeys.json')
 config_json = json.load(keyfile)
 client_key = config_json["client_key"]
 client_secret = config_json["client_secret"]

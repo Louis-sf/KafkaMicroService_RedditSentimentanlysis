@@ -1,5 +1,4 @@
 import json
-from json import JSONDecodeError
 from confluent_kafka import Producer
 from confluent_kafka import Consumer
 import ccloud_lib
@@ -11,7 +10,7 @@ import psaw_helper
 
 
 # ###############PSAW CONFIG########################
-keyfile = open('secrets/prawkeys.json')
+keyfile = open('../secrets/prawkeys.json')
 config_json = json.load(keyfile)
 client_key = config_json["client_key"]
 client_secret = config_json["client_secret"]
@@ -31,7 +30,7 @@ psaw_i = PushshiftAPI(praw_i)
 
 
 # ############### Consumer Config #####################
-config_file = "secrets/python.config"
+config_file = "../secrets/python.config"
 consumer_topic = "user_input"
 conf = ccloud_lib.read_ccloud_config(config_file)
 
@@ -45,7 +44,7 @@ api_Consumer.subscribe([consumer_topic])
 
 # ############# Producer Config #####################
 producer_topic = "reddit_raw_data"
-config_file = "secrets/python.config"
+config_file = "../secrets/python.config"
 conf = ccloud_lib.read_ccloud_config(config_file)
 producer_conf = ccloud_lib.pop_schema_registry_params_from_config(conf)
 raw_producer = Producer(producer_conf)

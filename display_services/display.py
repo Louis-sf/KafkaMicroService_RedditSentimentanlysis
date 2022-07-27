@@ -14,7 +14,7 @@ def histogram(prefix, value, color):
     return f"{prefix: >10}: {value: >5} {color}{bar}{reset}"
 
 
-config_file = "secrets/python.config"
+config_file = "../secrets/python.config"
 consumer_topic = "pksqlc-kj9ppAVG_SCORE_PER_REQUESTJSON"
 conf = ccloud_lib.read_ccloud_config(config_file)
 

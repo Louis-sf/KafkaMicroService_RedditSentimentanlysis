@@ -3,12 +3,11 @@ from confluent_kafka import Producer
 import ccloud_lib
 from datetime import datetime
 import uuid
-import psaw_helper
-
+from reddit_api_poller_services import psaw_helper
 
 # ###############Kafka Producer Config#################
 topic = "user_input"
-config_file = "secrets/python.config"
+config_file = "../secrets/python.config"
 conf = ccloud_lib.read_ccloud_config(config_file)
 producer_conf = ccloud_lib.pop_schema_registry_params_from_config(conf)
 userProducer = Producer(producer_conf)

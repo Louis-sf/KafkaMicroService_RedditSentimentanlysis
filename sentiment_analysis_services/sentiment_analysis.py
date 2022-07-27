@@ -2,11 +2,10 @@ import json
 from confluent_kafka import Producer
 from confluent_kafka import Consumer
 import ccloud_lib
-import nltk
 from nltk.sentiment import SentimentIntensityAnalyzer
 
 # ############### Consumer Config #####################
-config_file = "secrets/python.config"
+config_file = "../secrets/python.config"
 consumer_topic = "reddit_raw_data"
 conf = ccloud_lib.read_ccloud_config(config_file)
 
@@ -20,7 +19,7 @@ sentiment_consumer.subscribe([consumer_topic])
 
 # ############# Producer Config #####################
 producer_topic = "scored_thread"
-config_file = "secrets/python.config"
+config_file = "../secrets/python.config"
 conf = ccloud_lib.read_ccloud_config(config_file)
 producer_conf = ccloud_lib.pop_schema_registry_params_from_config(conf)
 raw_producer = Producer(producer_conf)
