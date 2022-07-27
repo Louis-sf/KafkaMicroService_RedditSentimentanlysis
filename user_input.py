@@ -14,8 +14,6 @@ producer_conf = ccloud_lib.pop_schema_registry_params_from_config(conf)
 userProducer = Producer(producer_conf)
 
 
-
-
 try:
     while True:
         try:
@@ -38,6 +36,9 @@ try:
             userProducer.produce(topic, value=json.dumps(Schema))
         except ValueError:
             print("Please make sure the input format is correct", "The error is, ", ValueError)
+            continue
+        except Exception as e:
+            print(e)
             continue
 except KeyboardInterrupt:
     print("Program ended")

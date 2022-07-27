@@ -86,10 +86,8 @@ try:
                     to_be_recorded = json.dumps(Schema)
                     raw_producer.produce(topic=producer_topic, key=thread_id, value=to_be_recorded)
                     print("record", record['title'], datetime.fromtimestamp(record['created_utc']), "appended", "\n")
-                except KeyError:
-                    continue
-                except JSONDecodeError:
-                    continue
+                except Exception as e:
+                    print(e)
             print(count, "records were appended")
             raw_producer.flush()
 except KeyboardInterrupt:
