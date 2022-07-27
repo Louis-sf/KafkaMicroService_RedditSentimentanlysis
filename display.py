@@ -48,15 +48,16 @@ try:
                 AVG_NEU = data['AVG_NEU']
                 AVG_COM = data['AVG_COM']
                 space = ' '*10
-                neg_bar = histogram("Negative", int(AVG_NEG), red) + space + '\n'
-                pos_bar = histogram("Positive", int(AVG_POS), yellow) + space + '\n' + space
-                neu_bar = histogram("Neutral", int(AVG_NEU), green) + space + '\n' + space
+                # neg_bar = histogram("Negative", int(AVG_NEG), red) + space + '\n'
+                # pos_bar = histogram("Positive", int(AVG_POS), yellow) + space + '\n' + space
+                # neu_bar = histogram("Neutral", int(AVG_NEU), green) + space + '\n' + space
 
                 res = 'The {subR} subreddit you requested has average negative score {AVG_NEG}, average postive score ' \
                       '{AVG_POS}, average neutral score {AVG_NEU} and average compound score {AVG_COM}'.format(
                        subR=subR, AVG_NEG=round(AVG_NEG, 2), AVG_POS=round(AVG_POS, 2), AVG_NEU=round(AVG_NEU, 2),
                        AVG_COM=round(AVG_COM, 2)) + space
-                print('\r' + neg_bar + pos_bar + neu_bar + res, end='\r')
+                print('\r' + res, end='')
+                # print('\r' + neg_bar + pos_bar + neu_bar + res, end='\r')
                 # print('\r'+histogram("Negative", int(AVG_NEG), red)+space+'\n', end='\r')
                 # print('\r'+histogram("Neutral", int(AVG_NEU), yellow)+space+'\n', end='\r')
                 # print('\r'+histogram("Good", int(AVG_POS), green)+space+'\n', end='\r')
