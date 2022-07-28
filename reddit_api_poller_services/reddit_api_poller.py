@@ -28,26 +28,19 @@ praw_i = praw.Reddit(
 psaw_i = PushshiftAPI(praw_i)
 
 
-# ############### Consumer Config #####################
-config_file = "../secrets/python.config"
-consumer_topic = "user_input"
-conf = ccloud_lib.read_ccloud_config(config_file)
-
-consumer_conf = ccloud_lib.pop_schema_registry_params_from_config(conf)
-consumer_conf['group.id'] = 'indefiniteconsumer'
-consumer_conf['auto.offset.reset'] = 'latest'
-consumer_conf['enable.auto.commit'] = 'false'
-
-# ############# Producer Config #####################
-producer_topic = "reddit_raw_data"
-config_file = "../secrets/python.config"
-conf = ccloud_lib.read_ccloud_config(config_file)
-producer_conf = ccloud_lib.pop_schema_registry_params_from_config(conf)
-
-
 def consuming_request():
+    # ############### Consumer Config #####################
+    config_file = "../secrets/python.config"
+    consumer_topic = "user_input"
+    conf = ccloud_lib.read_ccloud_config(config_file)
+    consumer_conf = ccloud_lib.pop_schema_registry_params_from_config(conf)
+    consumer_conf['group.id'] = 'indefiniteconsumer'
+    consumer_conf['auto.offset.reset'] = 'latest'
+    consumer_conf['enable.auto.commit'] = 'false'
+
     api_consumer = Consumer(conf)
     api_consumer.subscribe([consumer_topic])
+    print('consumer created')
     while True:
         msg = api_consumer.poll(1.0)
         if msg is None:
@@ -63,10 +56,17 @@ def consuming_request():
             request_id = data['request_id']
             print("start polling...")
             poll_reddit_api(start_epoch, end_epoch, subreddit, request_id)
+        print('loop running')
 
 
 def poll_reddit_api(start_epoch, end_epoch, subreddit, request_id):
+    # ############# Producer Config #####################
+    producer_topic = "reddit_raw_data"
+    config_file = "../secrets/python.config"
+    conf = ccloud_lib.read_ccloud_config(config_file)
+    producer_conf = ccloud_lib.pop_schema_registry_params_from_config(conf)
     raw_producer = Producer(producer_conf)
+    print('producer created')
     for record in psaw_helper.get_pushshift_data(start_epoch, end_epoch, subreddit):
         try:
             text = record['title'] + "**&*" + record['selftext']

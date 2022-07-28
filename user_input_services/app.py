@@ -7,11 +7,10 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    print('hello')
+    app.logger.info('hello')
     subname = request.args.get("subreddit", "")
     startdate = request.args.get("startdate", "")
     enddate = request.args.get("enddate", "")
-
     result = post_input(subname, startdate, enddate)
     if result == '':
         result = 'Request Failed'
@@ -30,6 +29,7 @@ def index():
 
 
 def post_input(subreddit, start, end):
+    app.logger.info('jumping to user_input.py')
     return user_input.prompt_input(subreddit, start, end)
 
 
@@ -39,7 +39,9 @@ if __name__ == '__main__':
 
 @app.before_first_request
 def launch_consumers():
-    print("thread creating")
+    app.logger.info("thread creating")
     api_poller_t = Thread(target=reddit_api_poller.consuming_request())
-    print("thread starting")
+    app.logger.info("thread created and starting")
     api_poller_t.start()
+
+#@app.before_first_request
