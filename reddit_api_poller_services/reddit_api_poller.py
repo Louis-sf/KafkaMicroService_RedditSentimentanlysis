@@ -6,8 +6,7 @@ from datetime import datetime
 import requests
 import praw
 from psaw import PushshiftAPI
-import psaw_helper
-
+from user_input_services import psaw_helper
 
 # ###############PSAW CONFIG########################
 keyfile = open('../secrets/prawkeys.json')
