@@ -38,55 +38,94 @@ consumer_conf['group.id'] = 'indefiniteconsumer'
 consumer_conf['auto.offset.reset'] = 'latest'
 consumer_conf['enable.auto.commit'] = 'false'
 
-api_Consumer = Consumer(conf)
-api_Consumer.subscribe([consumer_topic])
-
 # ############# Producer Config #####################
 producer_topic = "reddit_raw_data"
 config_file = "../secrets/python.config"
 conf = ccloud_lib.read_ccloud_config(config_file)
 producer_conf = ccloud_lib.pop_schema_registry_params_from_config(conf)
-raw_producer = Producer(producer_conf)
 
 
-try:
+def consuming_request():
+    api_consumer = Consumer(conf)
+    api_consumer.subscribe([consumer_topic])
     while True:
-        count = 0
-        msg = api_Consumer.poll(1.0)
+        msg = api_consumer.poll(1.0)
         if msg is None:
-            print("Waiting for message or event/error in poll()")
             continue
         elif msg.error():
-            print('error: {}'.format(msg.error()))
-            break
+            return msg.error()
         else:
-            # Check for Kafka message
             record_value = msg.value()
             data = json.loads(record_value)
             subreddit = data['sub_reddit']
             start_epoch = int(data['start_date'])
             end_epoch = int(data['end_date'])
             request_id = data['request_id']
-            for record in psaw_helper.get_pushshift_data(start_epoch, end_epoch, subreddit):
-                try:
-                    count += 1
-                    text = record['title'] + "**&*" + record['selftext']
-                    sub = record['subreddit']
-                    url = record['url']
-                    thread_id = record['id']
-                    Schema = {
-                        'id': thread_id,
-                        'request_id': request_id,
-                        'title_text': text,
-                        'sub_reddit': sub,
-                        'url': url
-                    }
-                    to_be_recorded = json.dumps(Schema)
-                    raw_producer.produce(topic=producer_topic, key=thread_id, value=to_be_recorded)
-                    print("record", record['title'], datetime.fromtimestamp(record['created_utc']), "appended", "\n")
-                except Exception as e:
-                    print(e)
-            print(count, "records were appended")
-            raw_producer.flush()
-except KeyboardInterrupt:
-    raw_producer.flush()
+            print("start polling...")
+            poll_reddit_api(start_epoch, end_epoch, subreddit, request_id)
+
+
+def poll_reddit_api(start_epoch, end_epoch, subreddit, request_id):
+    raw_producer = Producer(producer_conf)
+    for record in psaw_helper.get_pushshift_data(start_epoch, end_epoch, subreddit):
+        try:
+            text = record['title'] + "**&*" + record['selftext']
+            sub = record['subreddit']
+            url = record['url']
+            thread_id = record['id']
+            Schema = {
+                'id': thread_id,
+                'request_id': request_id,
+                'title_text': text,
+                'sub_reddit': sub,
+                'url': url
+            }
+            to_be_recorded = json.dumps(Schema)
+            raw_producer.produce(topic=producer_topic, key=thread_id, value=to_be_recorded)
+            print("record", record['title'], datetime.fromtimestamp(record['created_utc']), "appended", "\n")
+        except Exception as e:
+            print(e)
+        raw_producer.flush()
+
+# try:
+#     while True:
+#         count = 0
+#         msg = api_Consumer.poll(1.0)
+#         if msg is None:
+#             print("Waiting for message or event/error in poll()")
+#             continue
+#         elif msg.error():
+#             print('error: {}'.format(msg.error()))
+#             break
+#         else:
+#             # Check for Kafka message
+#             record_value = msg.value()
+#             data = json.loads(record_value)
+#             subreddit = data['sub_reddit']
+#             start_epoch = int(data['start_date'])
+#             end_epoch = int(data['end_date'])
+#             request_id = data['request_id']
+#
+#             for record in psaw_helper.get_pushshift_data(start_epoch, end_epoch, subreddit):
+#                 try:
+#                     count += 1
+#                     text = record['title'] + "**&*" + record['selftext']
+#                     sub = record['subreddit']
+#                     url = record['url']
+#                     thread_id = record['id']
+#                     Schema = {
+#                         'id': thread_id,
+#                         'request_id': request_id,
+#                         'title_text': text,
+#                         'sub_reddit': sub,
+#                         'url': url
+#                     }
+#                     to_be_recorded = json.dumps(Schema)
+#                     raw_producer.produce(topic=producer_topic, key=thread_id, value=to_be_recorded)
+#                     print("record", record['title'], datetime.fromtimestamp(record['created_utc']), "appended", "\n")
+#                 except Exception as e:
+#                     print(e)
+#             print(count, "records were appended")
+#             raw_producer.flush()
+# except KeyboardInterrupt:
+#     raw_producer.flush()

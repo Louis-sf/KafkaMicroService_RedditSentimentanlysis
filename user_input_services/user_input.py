@@ -38,7 +38,7 @@ def prompt_input(subreddit, start, end):
             userProducer.produce(topic, value=json.dumps(schema))
             return json.dumps(schema)
         except ValueError:
-            print("Please make sure the input format is correct", "The error is, ", ValueError)
+            print("user_input.py : Please make sure the input format is correct", "The error is, ", ValueError)
             break
         except Exception as e:
             print(e)
