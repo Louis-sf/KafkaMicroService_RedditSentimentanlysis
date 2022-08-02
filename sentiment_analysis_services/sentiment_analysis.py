@@ -24,9 +24,11 @@ conf = ccloud_lib.read_ccloud_config(config_file)
 producer_conf = ccloud_lib.pop_schema_registry_params_from_config(conf)
 raw_producer = Producer(producer_conf)
 
+
 # ############# Polling Raw Thread #####################
-sia = SentimentIntensityAnalyzer()
-try:
+def sentiment_analysis():
+    print("running sentiment analysis")
+    sia = SentimentIntensityAnalyzer()
     while True:
         try:
             msg = sentiment_consumer.poll(1.0)
@@ -60,9 +62,8 @@ try:
                 }
                 to_be_recorded = json.dumps(Schema)
                 raw_producer.produce(topic=producer_topic, key=id, value=to_be_recorded)
+            print("appended scored data")
             raw_producer.flush()
         except Exception as e:
             print(e)
             continue
-except KeyboardInterrupt:
-    pass

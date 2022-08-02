@@ -16,32 +16,31 @@ userProducer = Producer(producer_conf)
 
 
 def prompt_input(subreddit, start, end):
-    while True:
-        try:
-            # sub = input("Please choose a subreddit you would like to analyze, don't include /r in the beginning\n")
-            sub = subreddit
-            if psaw_helper.sub_invalid(sub):
-                print("this subreddit does not exist, please enter again")
-                continue
-            # my_string = str(input('Please enter the start date: \nEnter date(yyyy-mm-dd): '))
-            start_date = datetime.strptime(start, "%Y-%m-%d").timestamp()
-            # my_string = str(input('Please enter the end date: \nEnter date(yyyy-mm-dd): '))
-            end_date = datetime.strptime(end, "%Y-%m-%d").timestamp()
-            request_id = str(uuid.uuid4())
+    try:
+        # sub = input("Please choose a subreddit you would like to analyze, don't include /r in the beginning\n")
+        sub = subreddit
+        if psaw_helper.sub_invalid(sub):
+            print("this subreddit does not exist, please enter again")
+            return '1'
+        # my_string = str(input('Please enter the start date: \nEnter date(yyyy-mm-dd): '))
+        start_date = datetime.strptime(start, "%Y-%m-%d").timestamp()
+        # my_string = str(input('Please enter the end date: \nEnter date(yyyy-mm-dd): '))
+        end_date = datetime.strptime(end, "%Y-%m-%d").timestamp()
+        request_id = str(uuid.uuid4())
 
-            schema = {
-                "request_id": request_id,
-                "sub_reddit": sub,
-                "start_date": str(int(start_date)),
-                "end_date": str(int(end_date))
-            }
-            userProducer.produce(topic, value=json.dumps(schema))
-            return json.dumps(schema)
-        except ValueError:
-            print("user_input.py : Please make sure the input format is correct", "The error is, ", ValueError)
-            break
-        except Exception as e:
-            print(e)
-            break
+        schema = {
+            "request_id": request_id,
+            "sub_reddit": sub,
+            "start_date": str(int(start_date)),
+            "end_date": str(int(end_date))
+        }
+        userProducer.produce(topic, value=json.dumps(schema))
+        return json.dumps(schema)
+    except ValueError:
+        print("user_input.py : Please make sure the input format is correct", "The error is, ", ValueError)
+        return ''
+    except Exception as e:
+        print(e)
+        return ''
     return ''
 

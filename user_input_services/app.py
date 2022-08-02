@@ -1,7 +1,10 @@
 from flask import Flask, request
-from threading import Thread
+from threading import Thread, Event
 import user_input
 from reddit_api_poller_services import reddit_api_poller
+from sentiment_analysis_services import sentiment_analysis
+import flask_sock
+
 app = Flask(__name__)
 
 
@@ -14,8 +17,12 @@ def index():
     result = post_input(subname, startdate, enddate)
     if result == '':
         result = 'Request Failed'
+    elif result == '1':
+        result = 'This subreddit does not exist, please try again'
     else:
+        app.logger.info('request generated')
         result = 'Request Succeed' + result
+
     return """
             <div>
                 <h1>Welcome to Reddit Sentiment Analysis microservices powered by Apache Kafka and Confluent<h1>
@@ -33,15 +40,28 @@ def post_input(subreddit, start, end):
     return user_input.prompt_input(subreddit, start, end)
 
 
+# @app.before_first_request
+def launch_consumers():
+    # main_thread = Thread(target=index())
+    # app.logger.info('main thread created, and running')
+    # main_thread.start()
+    app.logger.info("reddit_api_poller_thread creating")
+    api_poller_t = Thread(target=reddit_api_poller.consuming_request(), daemon=True)
+    app.logger.info("reddit_api_poller_thread created and starting")
+    app.logger.info("sentiment_analysis_thread creating")
+    sa_t = Thread(target=sentiment_analysis.sentiment_analysis(), daemon=True)
+    app.logger.info("sentiment_analysis_thread created and starting")
+    api_poller_t.start()
+    sa_t.start()
+
+
 if __name__ == '__main__':
+    # app.config.from_object(Config())
+    # scheduler = APScheduler()
+    # scheduler.init_app(app)
+    # scheduler.start()
     app.run(debug=True)
 
 
-@app.before_first_request
-def launch_consumers():
-    app.logger.info("thread creating")
-    api_poller_t = Thread(target=reddit_api_poller.consuming_request())
-    app.logger.info("thread created and starting")
-    api_poller_t.start()
 
-#@app.before_first_request
+

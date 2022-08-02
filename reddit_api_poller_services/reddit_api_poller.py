@@ -54,9 +54,7 @@ def consuming_request():
             start_epoch = int(data['start_date'])
             end_epoch = int(data['end_date'])
             request_id = data['request_id']
-            print("start polling...")
             poll_reddit_api(start_epoch, end_epoch, subreddit, request_id)
-        print('loop running')
 
 
 def poll_reddit_api(start_epoch, end_epoch, subreddit, request_id):
