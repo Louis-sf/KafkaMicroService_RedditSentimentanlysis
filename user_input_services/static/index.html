@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div class="testbox">
+      <form action="/">
+        <div class="banner">
+          <h1>Reddit Sentiment Analysis</h1>
+        </div>
+        <div class="item">
+          <p>Sub Reddit</p>
+          <div class="name-item">
+            <input type="text" name="subreddit" placeholder="Sub Reddit" />
+          </div>
+        </div>
+        <div class="item">
+          <p>Start Date</p>
+          <input type="date" name="startdate" required/>
+          <i class="fas fa-calendar-alt"></i>
+        </div>
+        <div class="item">
+          <p> End Date Date</p>
+          <input type="date" name="enddate" required/>
+          <i class="fas fa-calendar-alt"></i>
+        </div>
+        <div class="btn-block">
+          <button type="submit" href="/">Analyze</button>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>

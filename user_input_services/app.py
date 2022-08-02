@@ -5,7 +5,7 @@ from reddit_api_poller_services import reddit_api_poller
 from sentiment_analysis_services import sentiment_analysis
 import flask_sock
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
 
 
 @app.route('/')
@@ -22,17 +22,18 @@ def index():
     else:
         app.logger.info('request generated')
         result = 'Request Succeed' + result
-
-    return """
-            <div>
-                <h1>Welcome to Reddit Sentiment Analysis microservices powered by Apache Kafka and Confluent<h1>
-            <div>
-            <form action="" method="get">
-                <input type = "text" name = "subreddit" placeholder = "subreddit">
-                <input type = "text" name = "startdate" placeholder = "start date">
-                <input type = "text" name = "enddate" placeholder = "end date">
-                <input type="submit" value="Search">
-              </form>""" + result
+        # launch_consumers()
+    return app.send_static_file("index.html")
+    # return """
+    #         <div>
+    #             <h1>Welcome to Reddit Sentiment Analysis microservices powered by Apache Kafka and Confluent<h1>
+    #         <div>
+    #         <form action="" method="get">
+    #             <input type = "text" name = "subreddit" placeholder = "subreddit">
+    #             <input type = "text" name = "startdate" placeholder = "start date">
+    #             <input type = "text" name = "enddate" placeholder = "end date">
+    #             <input type="submit" value="Search">
+    #           </form>""" + result
 
 
 def post_input(subreddit, start, end):

@@ -44,6 +44,7 @@ def consuming_request():
     while True:
         msg = api_consumer.poll(1.0)
         if msg is None:
+            print('rap waiting...')
             continue
         elif msg.error():
             return msg.error()
