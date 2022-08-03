@@ -7,7 +7,7 @@ from datetime import datetime
 import requests
 import praw
 from psaw import PushshiftAPI
-from user_input_services import psaw_helper
+import psaw_helper
 
 
 # ###############PSAW CONFIG########################
