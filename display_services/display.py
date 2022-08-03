@@ -1,7 +1,6 @@
 import json
 import ccloud_lib
 from confluent_kafka import Consumer, KafkaError
-import logging
 
 yellow = "\x1b[33;20m"
 red = "\x1b[31;20m"

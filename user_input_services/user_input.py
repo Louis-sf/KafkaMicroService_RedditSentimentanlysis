@@ -3,9 +3,9 @@ from confluent_kafka import Producer
 import sys
 from datetime import datetime
 import uuid
+import psaw_helper
 sys.path.append('../')
 import ccloud_lib
-import psaw_helper
 
 # ###############Kafka Producer Config#################
 topic = "user_input"
@@ -42,5 +42,3 @@ def prompt_input(subreddit, start, end):
     except Exception as e:
         print(e)
         return ''
-    return ''
-
