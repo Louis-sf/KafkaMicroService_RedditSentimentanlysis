@@ -56,7 +56,7 @@ try:
         count = 0
         msg = api_Consumer.poll(1.0)
         if msg is None:
-            print("Waiting for message or event/error in poll()")
+            print("rap waiting for message or event/error in poll()")
             continue
         elif msg.error():
             print('error: {}'.format(msg.error()))

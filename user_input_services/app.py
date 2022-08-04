@@ -14,7 +14,7 @@ def index():
     enddate = request.args.get("enddate", "")
     result = post_input(subname, startdate, enddate)
     if result == '':
-        result = 'Request Failed'
+        result = 'Enter your request'
     elif result == '1':
         result = 'This subreddit does not exist, please try again'
     else:
@@ -26,11 +26,6 @@ def index():
 def post_input(subreddit, start, end):
     app.logger.info('jumping to user_input.py')
     return user_input.prompt_input(subreddit, start, end)
-
-
-@app.route('/display')
-def display():
-    return 'your request is successful'
 
 
 if __name__ == '__main__':
