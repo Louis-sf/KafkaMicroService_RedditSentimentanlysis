@@ -1,9 +1,9 @@
-from flask import Flask, request
+from flask import Flask, request, render_template
 from threading import Thread
 import user_input
 
 
-app = Flask(__name__, static_url_path='/static')
+app = Flask(__name__, static_folder='templates')
 
 
 @app.route('/')
@@ -20,7 +20,7 @@ def index():
     else:
         app.logger.info('request generated')
         result = 'Request Succeed' + result
-    return app.send_static_file("index.html")
+    return render_template("index.html")
 
 
 def post_input(subreddit, start, end):
