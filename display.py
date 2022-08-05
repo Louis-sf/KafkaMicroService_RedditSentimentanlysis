@@ -2,7 +2,7 @@ import csv
 import json
 import sys
 from confluent_kafka import Consumer, KafkaError
-sys.path.append('../')
+sys.path.append('/')
 import ccloud_lib
 yellow = "\x1b[33;20m"
 red = "\x1b[31;20m"
@@ -15,7 +15,7 @@ def histogram(prefix, value, color):
     return f"{prefix: >10}: {value: >5} {color}{bar}{reset}"
 
 
-config_file = "../secrets/python.config"
+config_file = "secrets/python.config"
 consumer_topic = "pksqlc-kj9ppAVG_SCORE_PER_REQUESTJSON"
 conf = ccloud_lib.read_ccloud_config(config_file)
 
@@ -28,23 +28,26 @@ display_Consumer = Consumer(conf)
 display_Consumer.subscribe([consumer_topic])
 
 r_id_mem = set()
-f = open("consumer_data.csv", "w")
+f = open("user_input_services/templates/consumer_data.csv", "w")
 writer = csv.writer(f)
-fields = ['SUB_REDDIT', 'REQUEST_ID', 'AVG_NEG', 'AVG_POS', 'AVG_NEU', 'AVG_COM']
-writer.writerow(fields)
+fields = ['SCORE', 'VALUE']
 f.close()
+ft = open("user_input_services/templates/hi.txt", "w")
+print('header written')
 while True:
     try:
         msg = display_Consumer.poll(1)
         if msg is None:
-            print('waiting for message')
+            print('csvwriter waiting for message')
             continue
         elif msg.error():
             print('error: {}'.format(msg.error()))
             break
         else:
-            f = open("consumer_data.csv", "w")
+            print("open file in the loop")
+            f = open("user_input_services/templates/consumer_data.csv", "w")
             writer = csv.writer(f)
+            writer.writerow(fields)
             record_value = msg.value()
             record_key = msg.key()
             key = json.loads(record_key)
@@ -59,24 +62,21 @@ while True:
                 f.truncate(0)
                 writer.writerow(fields)
                 r_id_mem = set()
+                print("new r_id, rewrite csv..")
             r_id_mem.add(r_id)
-            curr_row = [subR, r_id, AVG_NEG, AVG_POS, AVG_NEU, AVG_COM]
-            print("record{} written".format(curr_row))
-            writer.writerow(curr_row)
+            neg = ['AVG_NEG', str(AVG_NEG)]
+            print("record{} written".format(neg))
+            writer.writerow(neg)
+            pos = ['AVG_POS', str(AVG_POS)]
+            print("record{} written".format(pos))
+            writer.writerow(pos)
+            neu = ['AVG_NEU', str(AVG_NEU)]
+            print("record{} written".format(neu))
+            writer.writerow(neu)
+            com = ['AVG_COM', str(AVG_COM)]
+            print("record{} written".format(com))
+            writer.writerow(com)
             f.close()
-            # space = ' '*10
-            # neg_bar = histogram("Negative", int(AVG_NEG), red) + space + '\n'
-            # pos_bar = histogram("Positive", int(AVG_POS), yellow) + space + '\n' + space
-            # neu_bar = histogram("Neutral", int(AVG_NEU), green) + space + '\n' + space
-
-            # res = 'The {subR} subreddit you requested has average negative score {AVG_NEG}, average postive score ' \
-            #       '{AVG_POS}, average neutral score {AVG_NEU} and average compound score {AVG_COM}'.format(
-            #     subR=subR, AVG_NEG=round(AVG_NEG, 2), AVG_POS=round(AVG_POS, 2), AVG_NEU=round(AVG_NEU, 2),
-            #     AVG_COM=round(AVG_COM, 2)) + space
-            # print('\r' + neg_bar + pos_bar + neu_bar + res, end='\r')
-            # print('\r'+histogram("Negative", int(AVG_NEG), red)+space+'\n', end='\r')
-            # print('\r'+histogram("Neutral", int(AVG_NEU), yellow)+space+'\n', end='\r')
-            # print('\r'+histogram("Good", int(AVG_POS), green)+space+'\n', end='\r')
     except KeyError as er:
         print(er)
     except KafkaError as ke:

@@ -3,13 +3,14 @@
 <html>
   <head>
     <!-- Load d3.js -->
-    <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="https://d3js.org/d3.v6.js"></script>
 
-<!--    <script>-->
-<!--      function showGraph() {-->
-<!--        document.getElementById("demo").innerHTML = "Kafka Meetup!@"-->
-<!--      }-->
-<!--    </script>-->
+    <script>
+      function showGraph() {
+        text = {{data|tojson}}
+        document.getElementById("text_result").innerHTML = text.result
+      }
+    </script>
 </head>
   <body>
     <div class="testbox">
@@ -34,7 +35,11 @@
           <i class="fas fa-calendar-alt"></i>
         </div>
         <div class="btn-block">
-          <button type="submit" onclick="showGraph()">Analyze</button>
+          <button type="submit" onclick="showGraph()">Submit</button>
+        </div>
+        <div>
+          <p id="text_result">Please enter a request</p>
+          <button onclick="showGraph()">update</button>
         </div>
         <div id = "my_dataviz"></div>
       </form>

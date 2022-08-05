@@ -1,3 +1,6 @@
+import os
+import sys
+
 from flask import Flask, request, render_template
 from threading import Thread
 import user_input
@@ -20,7 +23,11 @@ def index():
     else:
         app.logger.info('request generated')
         result = 'Request Succeed' + result
-    return render_template("index.html")
+    data = {'result': result}
+    fn = getattr(sys.modules['__main__'], '__file__')
+    root_path = os.path.abspath(os.path.dirname(fn))
+    app.logger.info(root_path)
+    return render_template("index.html", data=data)
 
 
 def post_input(subreddit, start, end):

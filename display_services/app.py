@@ -1,10 +1,6 @@
 from flask import Flask
+
 import display
-
-import signal
-from flask_socketio import SocketIO
-
-import display_services.display
 
 app = Flask(__name__)
 # socketio = SocketIO(app)
@@ -12,7 +8,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def display():
-    return display_services.display.drawing()
+    return display.drawing()
 
 
 if __name__ == '__main__':
