@@ -1,5 +1,6 @@
 import os
 import sys
+import subprocess
 
 from flask import Flask, request, render_template
 from threading import Thread
@@ -20,6 +21,7 @@ def index():
         result = 'Enter your request'
     elif result == '1':
         result = 'This subreddit does not exist, please try again'
+        return result
     else:
         app.logger.info('request generated')
         result = 'Request Succeed' + result
@@ -32,14 +34,18 @@ def index():
 
 def post_input(subreddit, start, end):
     app.logger.info('jumping to user_input.py')
+    app.logger.info(subreddit)
+    app.logger.info(start)
+    app.logger.info(end)
     return user_input.prompt_input(subreddit, start, end)
 
 
+@app.before_first_request
+def run_subprocess():
+    subprocess.call(['sh', 'run.sh'])
+
+
 if __name__ == '__main__':
-    # app.config.from_object(Config())
-    # scheduler = APScheduler()
-    # scheduler.init_app(app)
-    # scheduler.start()
     app.run(debug=True)
 
 

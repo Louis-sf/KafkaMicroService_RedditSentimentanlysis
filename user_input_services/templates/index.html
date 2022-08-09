@@ -6,7 +6,7 @@
     <script src="https://d3js.org/d3.v6.js"></script>
 
     <script>
-      function showGraph() {
+      function showRes() {
         text = {{data|tojson}}
         document.getElementById("text_result").innerHTML = text.result
       }
@@ -35,14 +35,14 @@
           <i class="fas fa-calendar-alt"></i>
         </div>
         <div class="btn-block">
-          <button type="submit" onclick="showGraph()">Submit</button>
+          <button type="submit" onclick="showRes()">Submit</button>
         </div>
-        <div>
+      </form>
+      <div>
           <p id="text_result">Please enter a request</p>
-          <button onclick="showGraph()">update</button>
+          <button onclick="genGraph()">update</button>
         </div>
         <div id = "my_dataviz"></div>
-      </form>
     </div>
     <script src = "{{ url_for('static', filename='js/index.js') }}"></script>
   </body>
