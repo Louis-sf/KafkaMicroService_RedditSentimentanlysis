@@ -76,11 +76,13 @@ try:
                     sub = record['subreddit']
                     url = record['url']
                     thread_id = record['id']
+                    created_utc = record['created_utc']
                     Schema = {
                         'id': thread_id,
                         'request_id': request_id,
                         'title_text': text,
                         'sub_reddit': sub,
+                        'time_created': created_utc,
                         'url': url
                     }
                     to_be_recorded = json.dumps(Schema)

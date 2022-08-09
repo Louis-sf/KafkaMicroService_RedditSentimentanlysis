@@ -26,7 +26,7 @@ def get_pushshift_data(after, before, sub):
     result = []
     start = after
     while True:
-        url = 'https://api.pushshift.io/reddit/search/submission/?sort = desc'+'&limit=1000&after='+str(start)+'&before='+str(before)+'&subreddit='+str(sub)
+        url = 'https://api.pushshift.io/reddit/search/submission/?sort = desc'+'&limit=10000&after='+str(start)+'&before='+str(before)+'&subreddit='+str(sub)
         r = requests.get(url)
         initial_data = json.loads(r.text)
         init_len = len(result)

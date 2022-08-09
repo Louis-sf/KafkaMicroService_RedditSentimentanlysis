@@ -44,12 +44,14 @@ try:
             sub_reddit = data['sub_reddit']
             request_id = data['request_id']
             url = data['url']
+            time = data['time_created']
             score = sia.polarity_scores(title_text)
             Schema = {
                 'id': id,
                 'request_id': request_id,
                 'title_text': title_text,
                 'sub_reddit': sub_reddit,
+                'date': time,
                 'url': url,
                 'score_negative': score['neg'],
                 'score_neutral': score['neu'],
