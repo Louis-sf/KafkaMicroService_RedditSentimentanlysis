@@ -18,7 +18,7 @@ sentiment_consumer = Consumer(conf)
 sentiment_consumer.subscribe([consumer_topic])
 
 # ############# Producer Config #####################
-producer_topic = "scored_thread"
+producer_topic = "sentiment_score"
 config_file = "secrets/python.config"
 conf = ccloud_lib.read_ccloud_config(config_file)
 producer_conf = ccloud_lib.pop_schema_registry_params_from_config(conf)

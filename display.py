@@ -16,7 +16,7 @@ def histogram(prefix, value, color):
 
 
 config_file = "secrets/python.config"
-consumer_topic = "pksqlc-kj9ppAVG_SCORE_PER_REQUESTJSON"
+consumer_topic = "AVG_SENTIMENT_SCORE_PERREQUEST"
 conf = ccloud_lib.read_ccloud_config(config_file)
 
 consumer_conf = ccloud_lib.pop_schema_registry_params_from_config(conf)
