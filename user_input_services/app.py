@@ -12,7 +12,6 @@ app = Flask(__name__, static_folder='templates')
 
 @app.route('/')
 def index():
-    app.logger.info('hello')
     subname = request.args.get("subreddit", "")
     startdate = request.args.get("startdate", "")
     enddate = request.args.get("enddate", "")
@@ -26,17 +25,10 @@ def index():
         app.logger.info('request generated')
         result = 'Request Succeed' + result
     data = {'result': result}
-    fn = getattr(sys.modules['__main__'], '__file__')
-    root_path = os.path.abspath(os.path.dirname(fn))
-    app.logger.info(root_path)
     return render_template("index.html", data=data)
 
 
 def post_input(subreddit, start, end):
-    app.logger.info('jumping to user_input.py')
-    app.logger.info(subreddit)
-    app.logger.info(start)
-    app.logger.info(end)
     return user_input.prompt_input(subreddit, start, end)
 
 
